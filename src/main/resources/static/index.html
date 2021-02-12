@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trading Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script>
+        $.get('/order-book/sells', function(data) {
+            console.log(data);
+            $('#sells-container').html(getOrderBooksHtml(data));
+        });
+        $.get('/order-book/purchases', function(data) {
+            console.log(data);
+            $('#purchases-container').html(getOrderBooksHtml(data));
+        });
+	    var socket = new SockJS('/init');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe('/order-book/sells', function (message) {
+                console.log(message);
+                $('#sells-container').html(getOrderBooksHtml(JSON.parse(message.body)));
+            });
+            stompClient.subscribe('/order-book/purchases', function (message) {
+                console.log(message);
+                $('#purchases-container').html(getOrderBooksHtml(JSON.parse(message.body)));
+            });
+        });
+
+        function getOrderBooksHtml(orderBooks) {
+            var orderBooksHtml = '';
+            orderBooks.forEach(orderBook => orderBooksHtml += (
+                '<div class="order-book-row">' +
+                    '<div class="order-book-column">' + orderBook.price + '</div>' +
+                    '<div class="order-book-column">' + orderBook.quantity + '</div>' +
+                    '<div class="order-book-column">' + orderBook.totalPrice + '</div>' +
+                '</div>'
+            ));
+            return orderBooksHtml;
+        };
+	</script>
+</head>
+<body>
+    <div class="order-book-row">
+        <div class="order-book-column">Price</div>
+        <div class="order-book-column">Quantity</div>
+        <div class="order-book-column">Total price</div>
+    </div>
+    <hr>
+    <div id="sells-container"></div>
+    <hr>
+    <div id="purchases-container"></div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+.order-book-row {
+    display: flex;
+    justify-content: space-around;
+}
+
+.order-book-column {
+    min-width: 200px;
+    text-align: center;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-around;
+}
