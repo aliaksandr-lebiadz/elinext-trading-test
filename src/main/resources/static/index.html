@@ -3,54 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Trading Test</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="index.css">
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script>
-        $.get('/order-book/sells', function(data) {
-            console.log(data);
-            $('#sells-container').html(getOrderBooksHtml(data));
+        $.get('/order-book/sell', function(data) {
+            $('#sells-table').html(getOrderBooksHtml(data));
         });
-        $.get('/order-book/purchases', function(data) {
-            console.log(data);
-            $('#purchases-container').html(getOrderBooksHtml(data));
+        $.get('/order-book/buy', function(data) {
+            $('#purchases-table').html(getOrderBooksHtml(data));
         });
 	    var socket = new SockJS('/init');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             stompClient.subscribe('/order-book/sells', function (message) {
-                console.log(message);
-                $('#sells-container').html(getOrderBooksHtml(JSON.parse(message.body)));
+                $('#sells-table').html(getOrderBooksHtml(JSON.parse(message.body)));
             });
             stompClient.subscribe('/order-book/purchases', function (message) {
-                console.log(message);
-                $('#purchases-container').html(getOrderBooksHtml(JSON.parse(message.body)));
+                $('#purchases-table').html(getOrderBooksHtml(JSON.parse(message.body)));
             });
         });
 
         function getOrderBooksHtml(orderBooks) {
-            var orderBooksHtml = '';
+            var orderBooksHtml = (
+                '<tr>' +
+                    '<th>Price</th>' +
+                    '<th>Quantity</th>' +
+                    '<th>Total price</th>' +
+                '</tr>'
+            );
             orderBooks.forEach(orderBook => orderBooksHtml += (
-                '<div class="order-book-row">' +
-                    '<div class="order-book-column">' + orderBook.price + '</div>' +
-                    '<div class="order-book-column">' + orderBook.quantity + '</div>' +
-                    '<div class="order-book-column">' + orderBook.totalPrice + '</div>' +
-                '</div>'
+                '<tr>' +
+                    '<td>' + orderBook.price + '</td>' +
+                    '<td>' + orderBook.quantity + '</td>' +
+                    '<td>' + orderBook.totalPrice + '</td>' +
+                '</tr>'
             ));
             return orderBooksHtml;
         };
 	</script>
 </head>
 <body>
-    <div class="order-book-row">
-        <div class="order-book-column">Price</div>
-        <div class="order-book-column">Quantity</div>
-        <div class="order-book-column">Total price</div>
+    <div class="container">
+        <div class="order-books-table-container">
+            <p class="table-title">SELLS</p>
+            <table class="order-books-table" id="sells-table"></table>
+        </div>
+        <div class="order-books-table-container">
+            <p class="table-title">PURCHASES</p>
+            <table class="order-books-table" id="purchases-table"></table>
+        </div>
     </div>
-    <hr>
-    <div id="sells-container"></div>
-    <hr>
-    <div id="purchases-container"></div>
 </body>
 </html>

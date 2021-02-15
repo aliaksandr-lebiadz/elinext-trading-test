@@ -1,6 +1,6 @@
-package com.elinext.trading.test.service.impl;
+package com.elinext.trading.test.service.authorization.impl;
 
-import com.elinext.trading.test.service.AuthorizationService;
+import com.elinext.trading.test.service.authorization.AuthorizationService;
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.beans.factory.annotation.Value;

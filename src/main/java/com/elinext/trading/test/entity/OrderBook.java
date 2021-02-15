@@ -5,12 +5,15 @@ import java.math.BigDecimal;
 public class OrderBook {
 
 	private BigDecimal price;
+	private BigDecimal quantity;
+	private BigDecimal totalPrice;
 
-	private OrderSide side;
+	public OrderBook(BigDecimal price, BigDecimal quantity, BigDecimal totalPrice) {
 
-	private BigDecimal size;
-
-	private String market;
+		this.price = price;
+		this.quantity = quantity;
+		this.totalPrice = totalPrice;
+	}
 
 	public BigDecimal getPrice() {
 
@@ -22,39 +25,23 @@ public class OrderBook {
 		this.price = price;
 	}
 
-	public OrderSide getSide() {
+	public BigDecimal getQuantity() {
 
-		return side;
+		return quantity;
 	}
 
-	public void setSide(OrderSide side) {
+	public void setQuantity(BigDecimal quantity) {
 
-		this.side = side;
+		this.quantity = quantity;
 	}
 
-	public BigDecimal getSize() {
+	public BigDecimal getTotalPrice() {
 
-		return size;
+		return totalPrice;
 	}
 
-	public void setSize(BigDecimal size) {
+	public void setTotalPrice(BigDecimal totalPrice) {
 
-		this.size = size;
-	}
-
-	public String getMarket() {
-
-		return market;
-	}
-
-	public void setMarket(String market) {
-
-		this.market = market;
-	}
-
-	@Override
-	public String toString() {
-
-		return "OrderBook{" + "price=" + price + ", side=" + side + ", size=" + size + ", market='" + market + '\'' + '}';
+		this.totalPrice = totalPrice;
 	}
 }

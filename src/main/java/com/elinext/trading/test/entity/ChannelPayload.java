@@ -14,7 +14,7 @@ public class ChannelPayload {
 
 	private String type;
 
-	private List<OrderBook> data;
+	private List<OrderBookPayload> data;
 
 	public ChannelPayload() {
 
@@ -56,12 +56,12 @@ public class ChannelPayload {
 		this.type = type;
 	}
 
-	public List<OrderBook> getData() {
+	public List<OrderBookPayload> getData() {
 
 		return data;
 	}
 
-	public void setData(List<OrderBook> data) {
+	public void setData(List<OrderBookPayload> data) {
 
 		this.data = data;
 	}

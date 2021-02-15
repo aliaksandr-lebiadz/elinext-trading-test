@@ -1,4 +1,4 @@
-package com.elinext.trading.test.service;
+package com.elinext.trading.test.service.authorization;
 
 import org.springframework.web.socket.WebSocketHttpHeaders;
 

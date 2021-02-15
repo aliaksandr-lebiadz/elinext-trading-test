@@ -2,7 +2,7 @@ package com.elinext.trading.test;
 
 import com.elinext.trading.test.entity.Balance;
 import com.elinext.trading.test.handler.WebSocketHandlerImpl;
-import com.elinext.trading.test.service.AuthorizationService;
+import com.elinext.trading.test.service.authorization.AuthorizationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +18,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -78,11 +79,11 @@ public class ApplicationRunner extends SpringBootServletInitializer implements C
 
 	private void consumeBalances(HttpHeaders headers) throws JsonProcessingException {
 
-		var requestEntity = new HttpEntity<>(headers);
-		var response = restTemplate.exchange(BALANCE_URL, HttpMethod.GET, requestEntity, String.class);
+		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(BALANCE_URL, HttpMethod.GET, requestEntity, String.class);
 		if (response.getStatusCode() == HttpStatus.OK) {
 			String body = response.getBody();
-			var balances = objectMapper.readValue(body, new TypeReference<List<Balance>>() {});
+			List<Balance> balances = objectMapper.readValue(body, new TypeReference<List<Balance>>() {});
 			logger.info("balances: {}", balances);
 		} else {
 			logger.error("Error during consuming balances occurred! Status code: {}", response.getStatusCode());

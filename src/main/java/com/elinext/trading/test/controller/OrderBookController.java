@@ -1,10 +1,11 @@
 package com.elinext.trading.test.controller;
 
-import com.elinext.trading.test.entity.OrderBookView;
+import com.elinext.trading.test.entity.OrderBook;
 import com.elinext.trading.test.entity.OrderSide;
-import com.elinext.trading.test.repository.OrderBookRepository;
+import com.elinext.trading.test.service.order.book.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,24 +15,19 @@ import java.util.List;
 @RequestMapping("/order-book")
 public class OrderBookController {
 
-	private final OrderBookRepository orderBookRepository;
+	private final OrderBookService orderBookService;
 
 	@Autowired
-	public OrderBookController(OrderBookRepository orderBookRepository) {
+	public OrderBookController(OrderBookService orderBookService) {
 
-		this.orderBookRepository = orderBookRepository;
+		this.orderBookService = orderBookService;
 	}
 
-	@GetMapping("/sells")
-	public List<OrderBookView> getSells() {
+	@GetMapping("/{side}")
+	public List<OrderBook> getOrderBooks(@PathVariable("side") String sideValue) {
 
-		return orderBookRepository.findAllBySide(OrderSide.SELL);
-	}
-
-	@GetMapping("/purchases")
-	public List<OrderBookView> getPurchases() {
-
-		return orderBookRepository.findAllBySide(OrderSide.BUY);
+		OrderSide side = OrderSide.getByValue(sideValue);
+		return orderBookService.getAllBySide(side);
 	}
 
 }

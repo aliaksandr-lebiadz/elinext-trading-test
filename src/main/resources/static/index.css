@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.order-books-table-container {
+    width: 50%;
+    min-height: 100vh;
+    height: 100%;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+}
+
+.order-books-table {
+    width: 100%;
+    flex-direction: column;
+}
+
+tr:first-child {
+    border-bottom: 2px solid black;
+}
+
+td {
+    text-align: center;
+    width: 33%;
+}
+
+.table-title {
+    text-align: center;
+    font-weight: bold;
+}
