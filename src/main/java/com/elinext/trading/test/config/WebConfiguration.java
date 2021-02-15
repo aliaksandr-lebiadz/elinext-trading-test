@@ -10,19 +10,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebConfig implements WebSocketMessageBrokerConfigurer {
+public class WebConfiguration implements WebSocketMessageBrokerConfigurer {
 
-	private static final String ORDER_BOOK_DESTINATION_PREFIX = "/order-book";
-	private static final String STOMP_ENDPOINT = "/init";
-
-	@Override
-	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker(ORDER_BOOK_DESTINATION_PREFIX);
-	}
+	private static final String SOCKET_ENTRY_POINT = "/init";
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint(STOMP_ENDPOINT).withSockJS();
+		registry.addEndpoint(SOCKET_ENTRY_POINT).withSockJS();
 	}
 
 	@Bean

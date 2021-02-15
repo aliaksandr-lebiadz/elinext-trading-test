@@ -1,7 +1,7 @@
 package com.elinext.trading.test.controller;
 
 import com.elinext.trading.test.entity.OrderBook;
-import com.elinext.trading.test.entity.OrderSide;
+import com.elinext.trading.test.entity.Side;
 import com.elinext.trading.test.service.order.book.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +26,7 @@ public class OrderBookController {
 	@GetMapping("/{side}")
 	public List<OrderBook> getOrderBooks(@PathVariable("side") String sideValue) {
 
-		OrderSide side = OrderSide.getByValue(sideValue);
+		Side side = Side.getByValue(sideValue);
 		return orderBookService.getAllBySide(side);
 	}
 

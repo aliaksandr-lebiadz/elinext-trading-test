@@ -1,8 +1,9 @@
 package com.elinext.trading.test.handler;
 
-import com.elinext.trading.test.entity.OrderBookPayload;
-import com.elinext.trading.test.entity.OrderSide;
-import com.elinext.trading.test.entity.ChannelPayload;
+import com.elinext.trading.test.entity.WebSocketChannelDataPayload;
+import com.elinext.trading.test.entity.Side;
+import com.elinext.trading.test.entity.WebSocketChannelPayload;
+import com.elinext.trading.test.entity.WebSocketChannelType;
 import com.elinext.trading.test.service.order.book.OrderBookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -27,8 +28,6 @@ public class WebSocketHandlerImpl extends AbstractWebSocketHandler {
 	private static final String SUB_CHANNEL_NAME = "btc-eur";
 	private static final String PURCHASES_DESTINATION = "/order-book/purchases";
 	private static final String SELLS_DESTINATION = "/order-book/sells";
-	private static final String DATA_TYPE = "data";
-	private static final String SUBSCRIBE_TYPE = "subscribe";
 
 	private final SimpMessagingTemplate template;
 	private final ObjectMapper objectMapper;
@@ -48,14 +47,18 @@ public class WebSocketHandlerImpl extends AbstractWebSocketHandler {
 		String messageContent = new String(message.asBytes());
 		logger.info("Text message received: {}", messageContent);
 
-		ChannelPayload payload = objectMapper.readValue(messageContent, ChannelPayload.class);
-		if (payload.getType().equals(DATA_TYPE)) {
-			List<OrderBookPayload> orderBooks = payload.getData();
-			List<OrderBookPayload> suitableOrderBooks = orderBooks.stream().filter(orderBook -> !orderBook.getSize().equals(BigDecimal.ZERO)).collect(Collectors.toList());
+		WebSocketChannelPayload payload = objectMapper.readValue(messageContent, WebSocketChannelPayload.class);
+		if(payload.getType() == WebSocketChannelType.OFFLINE) {
+			logger.warn("Server is unreachable!");
+		} else if(payload.getType() == WebSocketChannelType.SUBSCRIBED) {
+			logger.info("Channel is subscribed!");
+		} else if (payload.getType() == WebSocketChannelType.DATA) {
+			List<WebSocketChannelDataPayload> orderBooks = payload.getData();
+			List<WebSocketChannelDataPayload> suitableOrderBooks = orderBooks.stream().filter(orderBook -> !orderBook.getSize().equals(BigDecimal.ZERO)).collect(Collectors.toList());
 			suitableOrderBooks.forEach(orderBookService::saveOrderBook);
 
-			sendOrderBooks(suitableOrderBooks, OrderSide.BUY, PURCHASES_DESTINATION);
-			sendOrderBooks(suitableOrderBooks, OrderSide.SELL, SELLS_DESTINATION);
+			sendOrderBooks(suitableOrderBooks, Side.BUY, PURCHASES_DESTINATION);
+			sendOrderBooks(suitableOrderBooks, Side.SELL, SELLS_DESTINATION);
 		}
 
 	}
@@ -65,13 +68,13 @@ public class WebSocketHandlerImpl extends AbstractWebSocketHandler {
 
 		logger.info("Socket connection established!");
 
-		ChannelPayload subscriptionPayload = new ChannelPayload(CHANNEL_NAME, SUB_CHANNEL_NAME, SUBSCRIBE_TYPE);
+		WebSocketChannelPayload subscriptionPayload = new WebSocketChannelPayload(CHANNEL_NAME, SUB_CHANNEL_NAME, WebSocketChannelType.SUBSCRIBE);
 		String subscriptionPayloadText = objectMapper.writeValueAsString(subscriptionPayload);
 
 		session.sendMessage(new TextMessage(subscriptionPayloadText));
 	}
 
-	private void sendOrderBooks(List<OrderBookPayload> orderBooks, OrderSide side, String destination) {
+	private void sendOrderBooks(List<WebSocketChannelDataPayload> orderBooks, Side side, String destination) {
 
 		boolean orderBookWithSideExists = orderBooks.stream().anyMatch(orderBook -> orderBook.getSide() == side);
 		if (orderBookWithSideExists) {

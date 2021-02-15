@@ -2,11 +2,11 @@ package com.elinext.trading.test.entity;
 
 import java.math.BigDecimal;
 
-public class OrderBookPayload {
+public class WebSocketChannelDataPayload {
 
 	private BigDecimal price;
 
-	private OrderSide side;
+	private Side side;
 
 	private BigDecimal size;
 
@@ -22,12 +22,12 @@ public class OrderBookPayload {
 		this.price = price;
 	}
 
-	public OrderSide getSide() {
+	public Side getSide() {
 
 		return side;
 	}
 
-	public void setSide(OrderSide side) {
+	public void setSide(Side side) {
 
 		this.side = side;
 	}

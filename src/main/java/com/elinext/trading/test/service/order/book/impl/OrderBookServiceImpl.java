@@ -1,8 +1,8 @@
 package com.elinext.trading.test.service.order.book.impl;
 
 import com.elinext.trading.test.entity.OrderBook;
-import com.elinext.trading.test.entity.OrderBookPayload;
-import com.elinext.trading.test.entity.OrderSide;
+import com.elinext.trading.test.entity.WebSocketChannelDataPayload;
+import com.elinext.trading.test.entity.Side;
 import com.elinext.trading.test.repository.OrderBookRepository;
 import com.elinext.trading.test.service.order.book.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +24,17 @@ public class OrderBookServiceImpl implements OrderBookService {
 	}
 
 	@Override
-	public List<OrderBook> getAllBySide(OrderSide side) {
+	public List<OrderBook> getAllBySide(Side side) {
 
 		return orderBookRepository.findAllBySide(side);
 	}
 
 	@Override
-	public void saveOrderBook(OrderBookPayload orderBookPayload) {
+	public void saveOrderBook(WebSocketChannelDataPayload webSocketChannelDataPayload) {
 
-		BigDecimal price = orderBookPayload.getPrice();
-		BigDecimal size = orderBookPayload.getSize();
-		OrderSide side = orderBookPayload.getSide();
+		BigDecimal price = webSocketChannelDataPayload.getPrice();
+		BigDecimal size = webSocketChannelDataPayload.getSize();
+		Side side = webSocketChannelDataPayload.getSide();
 		Optional<OrderBook> orderBookOptional = orderBookRepository.findByPriceAndSide(price, side);
 		if(orderBookOptional.isPresent()) {
 			OrderBook orderBook = orderBookOptional.get();

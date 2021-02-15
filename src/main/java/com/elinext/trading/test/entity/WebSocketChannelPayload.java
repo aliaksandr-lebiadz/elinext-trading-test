@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class ChannelPayload {
+public class WebSocketChannelPayload {
 
 	@JsonProperty("chan_name")
 	private String channelName;
@@ -12,14 +12,14 @@ public class ChannelPayload {
 	@JsonProperty("subchan_name")
 	private String subChannelName;
 
-	private String type;
+	private WebSocketChannelType type;
 
-	private List<OrderBookPayload> data;
+	private List<WebSocketChannelDataPayload> data;
 
-	public ChannelPayload() {
+	public WebSocketChannelPayload() {
 
 	}
-	public ChannelPayload(String channelName, String subChannelName, String type) {
+	public WebSocketChannelPayload(String channelName, String subChannelName, WebSocketChannelType type) {
 
 		this.channelName = channelName;
 		this.subChannelName = subChannelName;
@@ -46,22 +46,22 @@ public class ChannelPayload {
 		this.subChannelName = subChannelName;
 	}
 
-	public String getType() {
+	public WebSocketChannelType getType() {
 
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(WebSocketChannelType type) {
 
 		this.type = type;
 	}
 
-	public List<OrderBookPayload> getData() {
+	public List<WebSocketChannelDataPayload> getData() {
 
 		return data;
 	}
 
-	public void setData(List<OrderBookPayload> data) {
+	public void setData(List<WebSocketChannelDataPayload> data) {
 
 		this.data = data;
 	}

@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 
-public enum OrderSide {
+public enum Side {
 
 	BUY("buy"),
 	SELL("sell");
 
 	private final String value;
 
-	OrderSide(String value) {
+	Side(String value) {
 
 		this.value = value;
 	}
@@ -22,8 +22,8 @@ public enum OrderSide {
 		return value;
 	}
 
-	public static OrderSide getByValue(String value) {
+	public static Side getByValue(String value) {
 
-		return Arrays.stream(OrderSide.values()).filter(side -> side.value.equals(value)).findAny().orElseThrow(IllegalArgumentException::new);
+		return Arrays.stream(Side.values()).filter(side -> side.value.equals(value)).findAny().orElseThrow(IllegalArgumentException::new);
 	}
 }
